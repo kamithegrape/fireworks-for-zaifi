@@ -1,0 +1,687 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Night for Zaifi ✨</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #03030a;
+    color: white;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+    width: 100vw;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#sky {
+    z-index: 1;
+}
+
+#stars {
+    z-index: 0;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    pointer-events: none;
+    padding: 25px;
+}
+
+.eyebrow {
+    font-size: 10px;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    color: #d5b8a2;
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(65px, 12vw, 125px);
+    font-weight: 300;
+    letter-spacing: 5px;
+    background: linear-gradient(
+        120deg,
+        #fff3df,
+        #e7b9ce,
+        #e8d0a3,
+        #ffffff
+    );
+    background-size: 200%;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: shimmer 6s infinite linear;
+}
+
+@keyframes shimmer {
+    to { background-position: 200% center; }
+}
+
+.subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 3vw, 25px);
+    font-style: italic;
+    color: #d9c8d4;
+    margin-top: 12px;
+    letter-spacing: 2px;
+}
+
+.divider {
+    width: 65px;
+    height: 1px;
+    background: #d9b78d;
+    margin: 35px auto;
+    opacity: 0.7;
+}
+
+.message {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #d8c6c1;
+    text-transform: uppercase;
+    line-height: 2.5;
+}
+
+.start-btn {
+    pointer-events: auto;
+    margin-top: 45px;
+    padding: 17px 38px;
+    border: 1px solid rgba(231, 201, 177, 0.65);
+    background: rgba(255,255,255,0.035);
+    color: #f5e6dc;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.4s;
+    backdrop-filter: blur(10px);
+}
+
+.start-btn:hover {
+    background: #e8c9ad;
+    color: #100b12;
+    box-shadow: 0 0 40px rgba(232,201,173,0.3);
+}
+
+.bottom {
+    position: fixed;
+    bottom: 30px;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.4);
+    pointer-events: none;
+}
+
+#finalMessage {
+    position: fixed;
+    z-index: 5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 3s;
+}
+
+#finalMessage.show {
+    opacity: 1;
+}
+
+#finalMessage h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(32px, 6vw, 65px);
+    color: #fff0d9;
+    line-height: 1.2;
+}
+
+#finalMessage p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-style: italic;
+    color: #e7c5d5;
+    margin-top: 22px;
+    letter-spacing: 1px;
+}
+
+.hint {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 4;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.45);
+}
+
+@media(max-width:600px) {
+    .eyebrow { letter-spacing: 4px; }
+    .message { font-size: 8px; letter-spacing: 3px; }
+    .start-btn { padding: 15px 25px; }
+}
+</style></head><body><canvas id="stars"></canvas>
+<canvas id="sky"></canvas>
+
+<div class="overlay" id="intro"><div class="eyebrow">A little something for someone special</div>
+
+<h1>Zaifi.</h1>
+
+<div class="subtitle">
+    Some nights deserve a little magic.
+</div>
+
+<div class="divider"></div>
+
+<div class="message">
+    NO OCCASION NEEDED.<br>
+    JUST LOOK UP.
+</div>
+
+<button class="start-btn" onclick="beginShow()">
+    Light up the sky ✦
+</button>
+
+</div><div class="hint" id="hint">
+    TAP ANYWHERE TO CREATE MAGIC
+</div><div id="finalMessage">
+    <h2>The sky looks a little<br>more beautiful tonight.</h2>
+    <p>And somehow, this little universe reminded me of you.</p>
+</div><div class="bottom">
+    MADE OF LIGHT & A LITTLE MAGIC
+</div><script>
+
+// ========================================
+// CANVAS SETUP
+// ========================================
+
+const canvas = document.getElementById("sky");
+const ctx = canvas.getContext("2d");
+
+const starsCanvas = document.getElementById("stars");
+const sctx = starsCanvas.getContext("2d");
+
+let W, H;
+
+function resize() {
+    W = canvas.width = starsCanvas.width = innerWidth;
+    H = canvas.height = starsCanvas.height = innerHeight;
+    createStars();
+}
+
+window.addEventListener("resize", resize);
+
+let stars = [];
+
+function createStars() {
+    stars = [];
+
+    for(let i = 0; i < 180; i++) {
+        stars.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.5,
+            alpha: Math.random(),
+            speed: Math.random() * 0.015
+        });
+    }
+}
+
+function drawStars() {
+    sctx.clearRect(0,0,W,H);
+
+    stars.forEach(star => {
+        star.alpha += star.speed;
+
+        const opacity = 0.3 + Math.abs(Math.sin(star.alpha)) * 0.7;
+
+        sctx.beginPath();
+        sctx.arc(star.x, star.y, star.r, 0, Math.PI*2);
+        sctx.fillStyle = `rgba(255,255,255,${opacity})`;
+        sctx.fill();
+    });
+}
+
+// ========================================
+// FIREWORK ENGINE
+// ========================================
+
+let fireworks = [];
+let particles = [];
+let running = false;
+
+const colors = [
+    "#ffd700",
+    "#ff69b4",
+    "#a78bfa",
+    "#00e5ff",
+    "#ff477e",
+    "#ffffff",
+    "#7dffb3",
+    "#ff9f43",
+    "#f7d6ff"
+];
+
+function random(min,max) {
+    return Math.random() * (max-min) + min;
+}
+
+// Rocket
+
+class Firework {
+
+    constructor(x, targetY, color, type="normal") {
+        this.x = x;
+        this.y = H + 10;
+        this.targetY = targetY;
+        this.color = color;
+        this.speed = random(9,13);
+        this.type = type;
+        this.trail = [];
+        this.exploded = false;
+    }
+
+    update() {
+
+        this.trail.push({x:this.x,y:this.y});
+
+        if(this.trail.length > 7)
+            this.trail.shift();
+
+        this.y -= this.speed;
+
+        if(this.y <= this.targetY) {
+            this.exploded = true;
+            explode(this.x,this.y,this.color,this.type);
+        }
+    }
+
+    draw() {
+
+        ctx.beginPath();
+
+        if(this.trail.length) {
+            ctx.moveTo(this.trail[0].x,this.trail[0].y);
+
+            this.trail.forEach(p => ctx.lineTo(p.x,p.y));
+        }
+
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = this.color;
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+    }
+}
+
+// Particle
+
+class Particle {
+
+    constructor(x,y,color,vx,vy,life=100) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.vx = vx;
+        this.vy = vy;
+        this.life = life;
+        this.maxLife = life;
+        this.gravity = 0.055;
+        this.friction = 0.985;
+        this.size = random(1,3);
+        this.twinkle = Math.random() > 0.7;
+    }
+
+    update() {
+
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+
+        this.vy += this.gravity;
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        this.life--;
+    }
+
+    draw() {
+
+        const opacity = Math.max(0,this.life/this.maxLife);
+
+        ctx.globalAlpha = opacity;
+
+        ctx.beginPath();
+        ctx.arc(
+            this.x,
+            this.y,
+            this.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle = this.color;
+
+        ctx.shadowBlur = this.twinkle ? 20 : 10;
+        ctx.shadowColor = this.color;
+
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+    }
+}
+
+// ========================================
+// EXPLOSION TYPES
+// ========================================
+
+function explode(x,y,color,type="normal") {
+
+    let count = 110;
+
+    if(type === "grand") count = 260;
+    if(type === "heart") count = 150;
+    if(type === "willow") count = 160;
+
+    for(let i=0;i<count;i++) {
+
+        let angle;
+        let speed;
+
+        if(type === "heart") {
+
+            const t = (i/count)*Math.PI*2;
+
+            const hx = 16*Math.pow(Math.sin(t),3);
+            const hy = -(13*Math.cos(t)-5*Math.cos(2*t)
+                -2*Math.cos(3*t)-Math.cos(4*t));
+
+            const scale = random(0.18,0.28);
+
+            const vx = hx*scale;
+            const vy = hy*scale;
+
+            particles.push(
+                new Particle(
+                    x,y,color,
+                    vx,vy,
+                    random(90,140)
+                )
+            );
+
+            continue;
+        }
+
+        angle = Math.PI*2*Math.random();
+        speed = type === "grand"
+            ? random(2,11)
+            : random(2,7);
+
+        if(type === "willow") {
+            speed = random(1,6);
+        }
+
+        const vx = Math.cos(angle)*speed;
+        const vy = Math.sin(angle)*speed;
+
+        particles.push(
+            new Particle(
+                x,y,color,
+                vx,vy,
+                type === "willow"
+                    ? random(120,180)
+                    : random(70,130)
+            )
+        );
+    }
+
+    // Secondary glitter
+
+    for(let i=0;i<20;i++) {
+
+        particles.push(
+            new Particle(
+                x,y,
+                "#fff4d6",
+                random(-5,5),
+                random(-5,5),
+                random(25,60)
+            )
+        );
+    }
+}
+
+// ========================================
+// LAUNCH FIREWORKS
+// ========================================
+
+function launch(x=random(W*0.15,W*0.85),
+                y=random(H*0.15,H*0.48),
+                type="normal") {
+
+    const color = colors[
+        Math.floor(Math.random()*colors.length)
+    ];
+
+    fireworks.push(
+        new Firework(x,y,color,type)
+    );
+}
+
+// ========================================
+// MAIN ANIMATION
+// ========================================
+
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    drawStars();
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillStyle = "rgba(3,3,10,0.18)";
+    ctx.fillRect(0,0,W,H);
+
+    ctx.globalCompositeOperation = "lighter";
+
+    // Rockets
+
+    for(let i=fireworks.length-1;i>=0;i--) {
+
+        const f = fireworks[i];
+
+        f.update();
+        f.draw();
+
+        if(f.exploded) {
+            fireworks.splice(i,1);
+        }
+    }
+
+    // Particles
+
+    for(let i=particles.length-1;i>=0;i--) {
+
+        const p = particles[i];
+
+        p.update();
+        p.draw();
+
+        if(p.life<=0) {
+            particles.splice(i,1);
+        }
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+}
+
+// ========================================
+// SPECIAL FIREWORK SHOW
+// ========================================
+
+let showStarted = false;
+
+function beginShow() {
+
+    if(showStarted) return;
+
+    showStarted = true;
+    running = true;
+
+    document.getElementById("intro").style.opacity = "0";
+    document.getElementById("intro").style.transition = "2s";
+
+    setTimeout(() => {
+        document.getElementById("intro").style.display = "none";
+    },2000);
+
+    document.getElementById("hint").style.opacity = "0.5";
+
+    // First explosion
+
+    setTimeout(() => {
+        launch(W*0.5,H*0.35,"grand");
+    },500);
+
+    // Multiple fireworks
+
+    let sequence = 0;
+
+    const interval = setInterval(() => {
+
+        if(sequence > 18) {
+            clearInterval(interval);
+            return;
+        }
+
+        launch(
+            random(W*0.1,W*0.9),
+            random(H*0.12,H*0.5),
+            sequence % 5 === 0 ? "grand" : "normal"
+        );
+
+        if(sequence % 3 === 0) {
+            launch(
+                random(W*0.15,W*0.85),
+                random(H*0.15,H*0.45),
+                "willow"
+            );
+        }
+
+        sequence++;
+
+    },650);
+
+    // Heart moment
+
+    setTimeout(() => {
+        launch(W*0.5,H*0.32,"heart");
+    },6500);
+
+    // Another heart
+
+    setTimeout(() => {
+        launch(W*0.5,H*0.32,"heart");
+    },8500);
+
+    // Final message
+
+    setTimeout(() => {
+        document.getElementById("finalMessage")
+            .classList.add("show");
+    },11000);
+
+    // GRAND FINALE
+
+    setTimeout(() => {
+
+        document.getElementById("finalMessage")
+            .classList.remove("show");
+
+        let count = 0;
+
+        const finale = setInterval(() => {
+
+            launch(
+                random(W*0.08,W*0.92),
+                random(H*0.1,H*0.5),
+                "grand"
+            );
+
+            count++;
+
+            if(count > 25) {
+                clearInterval(finale);
+            }
+
+        },180);
+
+        setTimeout(() => {
+            document.getElementById("finalMessage")
+                .classList.add("show");
+        },3000);
+
+    },14500);
+}
+
+// ========================================
+// INTERACTIVE FIREWORKS
+// ========================================
+
+function handleInteraction(e) {
+
+    const x = e.clientX;
+    const y = e.clientY;
+
+    if(!showStarted) return;
+
+    launch(
+        x,
+        Math.max(50,y),
+        Math.random() > 0.85 ? "heart" : "normal"
+    );
+}
+
+canvas.addEventListener("pointerdown",handleInteraction);
+
+// ========================================
+// START
+// ========================================
+
+resize();
+animate();
+
+</script></body>
+</html>
